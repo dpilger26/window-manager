@@ -1,10 +1,14 @@
-#include <Windows.h>
+#include "yaml-cpp/yaml.h"
 
 #include <cstdlib>
 #include <iostream>
 
 int main()
 {
-    std::cout << "hello world\n";
+    YAML::Node hotkeys = YAML::LoadFile("/home/dpilger26/GitHub/window-manager/config/config.yaml");
+
+
+
+
     return EXIT_SUCCESS;
 }

@@ -1,0 +1,219 @@
+--- 
+hotkeys: 
+    - 
+        keys: 
+            - window
+            - 5
+        location: 
+            horizontal: center
+            vertical: center
+        name: Center
+    - 
+        keys: 
+            - window
+            - 4
+        location: 
+            horizontal: left
+            vertical: center
+        name: Left
+    - 
+        keys: 
+            - window
+            - 6
+        location: 
+            horizontal: right
+            vertical: center
+        name: Right
+    - 
+        keys: 
+            - window
+            - 8
+        location: 
+            horizontal: center
+            vertical: top
+        name: Top
+    - 
+        keys: 
+            - window
+            - 2
+        location: 
+            horizontal: center
+            vertical: bottom
+        name: Bottom
+    - 
+        keys: 
+            - window
+            - 7
+        location: 
+            horizontal: left
+            vertical: top
+        name: Top_Left
+    - 
+        keys: 
+            - window
+            - 9
+        location: 
+            horizontal: right
+            vertical: top
+        name: Top_Right
+    - 
+        keys: 
+            - window
+            - 1
+        location: 
+            horizontal: left
+            vertical: bottom
+        name: Bottom_Left
+    - 
+        keys: 
+            - window
+            - 3
+        location: 
+            horizontal: right
+            vertical: bottom
+        name: Bottom_Right
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 5
+        location: 
+            horizontal: center
+            vertical: center
+        name: Center_Resize_50
+        size: 
+            height: 100
+            width: 50
+    - 
+        keys: 
+            - window
+            - alt
+            - 5
+        location: 
+            horizontal: center
+            vertical: center
+        name: Center_Resize_60
+        size: 
+            height: 100
+            width: 60
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 4
+        location: 
+            horizontal: left
+            vertical: center
+        name: Left_Resize_25
+        size: 
+            height: 100
+            width: 25
+    - 
+        keys: 
+            - window
+            - alt
+            - 4
+        location: 
+            horizontal: left
+            vertical: center
+        name: Left_Resize_20
+        size: 
+            height: 100
+            width: 20
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 6
+        location: 
+            horizontal: right
+            vertical: center
+        name: Right_Resize_25
+        size: 
+            height: 100
+            width: 25
+    - 
+        keys: 
+            - window
+            - alt
+            - 6
+        location: 
+            horizontal: right
+            vertical: center
+        name: Right_Resize_20
+        size: 
+            height: 100
+            width: 20
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 7
+        location: 
+            horizontal: left
+            vertical: top
+        name: Top_Left_Resize
+        size: 
+            height: 50
+            width: 25
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 9
+        location: 
+            horizontal: right
+            vertical: top
+        name: Top_Right_Resize
+        size: 
+            height: 50
+            width: 25
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 1
+        location: 
+            horizontal: left
+            vertical: bottom
+        name: Bottom_Left_Resize
+        size: 
+            height: 50
+            width: 25
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 3
+        location: 
+            horizontal: right
+            vertical: bottom
+        name: Bottom_Right_Resize
+        size: 
+            height: 50
+            width: 25
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 8
+        location: 
+            horizontal: center
+            vertical: top
+        name: Top_Resize_50
+        size: 
+            height: 50
+            width: 50
+    - 
+        keys: 
+            - window
+            - ctrl
+            - 2
+        location: 
+            horizontal: center
+            vertical: bottom
+        name: Bottom_Resize_50
+        size: 
+            height: 50
+            width: 50
+    
