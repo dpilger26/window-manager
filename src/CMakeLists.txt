@@ -5,7 +5,12 @@ project("window-manager-app" CXX)
 find_package(wxWidgets REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} 
+  Buttons.hpp
+  Config.hpp
+  Controls.hpp
+  main.cpp
+)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${wxWidgets_INCLUDE_DIRS}

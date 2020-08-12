@@ -1,14 +1,11 @@
-#include "yaml-cpp/yaml.h"
+#include "Config.hpp"
 
 #include <cstdlib>
 #include <iostream>
 
 int main()
 {
-    YAML::Node hotkeys = YAML::LoadFile("/home/dpilger26/GitHub/window-manager/config/config.yaml");
-
-
-
-
+    auto hotkeys = wm::config::parseConfigFile("/home/dpilger26/GitHub/window-manager/config/config.yaml");
+    
     return EXIT_SUCCESS;
 }

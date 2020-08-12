@@ -1,219 +1,240 @@
 --- 
 hotkeys: 
     - 
+        action: 
+            location: 
+                horizontal: center
+                vertical: center
         keys: 
             - window
             - 5
-        location: 
-            horizontal: center
-            vertical: center
         name: Center
     - 
+        action: 
+            location: 
+                horizontal: left
+                vertical: center
         keys: 
             - window
             - 4
-        location: 
-            horizontal: left
-            vertical: center
         name: Left
     - 
+        action: 
+            location: 
+                horizontal: right
+                vertical: center
         keys: 
             - window
             - 6
-        location: 
-            horizontal: right
-            vertical: center
         name: Right
     - 
+        action: 
+            location: 
+                horizontal: center
+                vertical: top
         keys: 
             - window
             - 8
-        location: 
-            horizontal: center
-            vertical: top
         name: Top
     - 
+        action: 
+            location: 
+                horizontal: center
+                vertical: bottom
         keys: 
             - window
             - 2
-        location: 
-            horizontal: center
-            vertical: bottom
         name: Bottom
     - 
+        action: 
+            location: 
+                horizontal: left
+                vertical: top
         keys: 
             - window
             - 7
-        location: 
-            horizontal: left
-            vertical: top
         name: Top_Left
     - 
+        action: 
+            location: 
+                horizontal: right
+                vertical: top
         keys: 
             - window
             - 9
-        location: 
-            horizontal: right
-            vertical: top
         name: Top_Right
     - 
+        action: 
+            location: 
+                horizontal: left
+                vertical: bottom
         keys: 
             - window
             - 1
-        location: 
-            horizontal: left
-            vertical: bottom
         name: Bottom_Left
     - 
+        action: 
+            location: 
+                horizontal: right
+                vertical: bottom
         keys: 
             - window
             - 3
-        location: 
-            horizontal: right
-            vertical: bottom
         name: Bottom_Right
     - 
+        action: 
+            location: 
+                horizontal: center
+                vertical: center
+            size: 
+                height: 100
+                width: 50
         keys: 
             - window
             - ctrl
             - 5
-        location: 
-            horizontal: center
-            vertical: center
         name: Center_Resize_50
-        size: 
-            height: 100
-            width: 50
     - 
+        action: 
+            location: 
+                horizontal: center
+                vertical: center
+            size: 
+                height: 100
+                width: 60
         keys: 
             - window
             - alt
             - 5
-        location: 
-            horizontal: center
-            vertical: center
         name: Center_Resize_60
-        size: 
-            height: 100
-            width: 60
     - 
+        action: 
+            location: 
+                horizontal: left
+                vertical: center
+            size: 
+                height: 100
+                width: 25
         keys: 
             - window
             - ctrl
             - 4
-        location: 
-            horizontal: left
-            vertical: center
         name: Left_Resize_25
-        size: 
-            height: 100
-            width: 25
     - 
+        action: 
+            location: 
+                horizontal: left
+                vertical: center
+            size: 
+                height: 100
+                width: 20
         keys: 
             - window
             - alt
             - 4
-        location: 
-            horizontal: left
-            vertical: center
         name: Left_Resize_20
-        size: 
-            height: 100
-            width: 20
     - 
+        action: 
+            location: 
+                horizontal: right
+                vertical: center
+            size: 
+                height: 100
+                width: 25
         keys: 
             - window
             - ctrl
             - 6
-        location: 
-            horizontal: right
-            vertical: center
         name: Right_Resize_25
-        size: 
-            height: 100
-            width: 25
     - 
+        action: 
+            location: 
+                horizontal: right
+                vertical: center
+            size: 
+                height: 100
+                width: 20
         keys: 
             - window
             - alt
             - 6
-        location: 
-            horizontal: right
-            vertical: center
         name: Right_Resize_20
-        size: 
-            height: 100
-            width: 20
     - 
+        action: 
+            location: 
+                horizontal: left
+                vertical: top
+            size: 
+                height: 50
+                width: 25
         keys: 
             - window
             - ctrl
             - 7
-        location: 
-            horizontal: left
-            vertical: top
         name: Top_Left_Resize
-        size: 
-            height: 50
-            width: 25
     - 
+        action: 
+            location: 
+                horizontal: right
+                vertical: top
+            size: 
+                height: 50
+                width: 25
         keys: 
             - window
             - ctrl
             - 9
-        location: 
-            horizontal: right
-            vertical: top
         name: Top_Right_Resize
-        size: 
-            height: 50
-            width: 25
     - 
+        action: 
+            location: 
+                horizontal: left
+                vertical: bottom
+            size: 
+                height: 50
+                width: 25
         keys: 
             - window
             - ctrl
             - 1
-        location: 
-            horizontal: left
-            vertical: bottom
         name: Bottom_Left_Resize
-        size: 
-            height: 50
-            width: 25
     - 
+        action: 
+            location: 
+                horizontal: right
+                vertical: bottom
+            size: 
+                height: 50
+                width: 25
         keys: 
             - window
             - ctrl
             - 3
-        location: 
-            horizontal: right
-            vertical: bottom
         name: Bottom_Right_Resize
-        size: 
-            height: 50
-            width: 25
     - 
+        action: 
+            location: 
+                horizontal: center
+                vertical: top
+            size: 
+                height: 50
+                width: 50
         keys: 
             - window
             - ctrl
             - 8
-        location: 
-            horizontal: center
-            vertical: top
         name: Top_Resize_50
-        size: 
-            height: 50
-            width: 50
     - 
+        action: 
+            location: 
+                horizontal: center
+                vertical: bottom
+            size: 
+                height: 50
+                width: 50
         keys: 
             - window
             - ctrl
             - 2
-        location: 
-            horizontal: center
-            vertical: bottom
         name: Bottom_Resize_50
-        size: 
-            height: 50
-            width: 50
     
