@@ -6,9 +6,10 @@ find_package(wxWidgets REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
 add_executable(${PROJECT_NAME} 
-  Buttons.hpp
   Config.hpp
   Controls.hpp
+  Error.hpp
+  Keys.hpp
   main.cpp
 )
 
@@ -32,6 +33,7 @@ set_target_properties(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
   ${wxWidgets_DEFINITIONS}
+  DEBUG
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE

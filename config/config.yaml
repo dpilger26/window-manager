@@ -87,8 +87,8 @@ hotkeys:
                 horizontal: center
                 vertical: center
             size: 
-                height: 100
-                width: 50
+                horizontal: 50
+                vertical: 100
         keys: 
             - window
             - ctrl
@@ -100,8 +100,8 @@ hotkeys:
                 horizontal: center
                 vertical: center
             size: 
-                height: 100
-                width: 60
+                horizontal: 60
+                vertical: 100
         keys: 
             - window
             - alt
@@ -113,8 +113,8 @@ hotkeys:
                 horizontal: left
                 vertical: center
             size: 
-                height: 100
-                width: 25
+                horizontal: 25
+                vertical: 100
         keys: 
             - window
             - ctrl
@@ -126,8 +126,8 @@ hotkeys:
                 horizontal: left
                 vertical: center
             size: 
-                height: 100
-                width: 20
+                horizontal: 20
+                vertical: 100
         keys: 
             - window
             - alt
@@ -139,8 +139,8 @@ hotkeys:
                 horizontal: right
                 vertical: center
             size: 
-                height: 100
-                width: 25
+                horizontal: 25
+                vertical: 100
         keys: 
             - window
             - ctrl
@@ -152,8 +152,8 @@ hotkeys:
                 horizontal: right
                 vertical: center
             size: 
-                height: 100
-                width: 20
+                horizontal: 20
+                vertical: 100
         keys: 
             - window
             - alt
@@ -165,8 +165,8 @@ hotkeys:
                 horizontal: left
                 vertical: top
             size: 
-                height: 50
-                width: 25
+                horizontal: 25
+                vertical: 50
         keys: 
             - window
             - ctrl
@@ -178,8 +178,8 @@ hotkeys:
                 horizontal: right
                 vertical: top
             size: 
-                height: 50
-                width: 25
+                horizontal: 25
+                vertical: 50
         keys: 
             - window
             - ctrl
@@ -191,8 +191,8 @@ hotkeys:
                 horizontal: left
                 vertical: bottom
             size: 
-                height: 50
-                width: 25
+                horizontal: 25
+                vertical: 50
         keys: 
             - window
             - ctrl
@@ -204,8 +204,8 @@ hotkeys:
                 horizontal: right
                 vertical: bottom
             size: 
-                height: 50
-                width: 25
+                horizontal: 25
+                vertical: 50
         keys: 
             - window
             - ctrl
@@ -217,8 +217,8 @@ hotkeys:
                 horizontal: center
                 vertical: top
             size: 
-                height: 50
-                width: 50
+                horizontal: 50
+                vertical: 50
         keys: 
             - window
             - ctrl
@@ -228,10 +228,10 @@ hotkeys:
         action: 
             location: 
                 horizontal: center
-                vertical: bottom
+                vertical: center
             size: 
-                height: 50
-                width: 50
+                horizontal: 50
+                vertical: 50
         keys: 
             - window
             - ctrl
