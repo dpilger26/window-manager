@@ -4,14 +4,16 @@
 #include "Keys.hpp"
 #include "Utils.hpp"
 
-#include "wx-3.1/wx/defs.h"
 #include "yaml-cpp/yaml.h"
 
+#include <algorithm>
+#include <execution>
 #include <filesystem>
+#include <iterator>
 #include <map>
+#include <set>
 #include <stdexcept>
 #include <string>
-#include <vector>
 #ifdef DEBUG
 #include <iostream>
 #include <type_traits>
@@ -94,7 +96,7 @@ namespace wm::config
             utils::tolower(locationSubStr);
             return map.at(locationSubStr);
         }
-        catch(const std::out_of_range& err)
+        catch(const std::out_of_range&)
         {
             std::string errStr = "'" + locationSubStr + "' is not a valid '"; 
             errStr += std::string(fieldName) + "' '" + std::string(LOCATION_FIELD) + "' option.\n";
@@ -212,13 +214,13 @@ namespace wm::config
 
     //=================================================================================================================
 
-    inline void operator>>(const YAML::Node& hotkeyNode, Action& action)
+    inline void operator>>(const YAML::Node& hotKeyNode, Action& action)
     {
 #ifdef DEBUG
-        std::cout << "Parsing hotkey action...\n";
+        std::cout << "Parsing hotKey action...\n";
 #endif
 
-        const auto actionNode = hotkeyNode[ACTION_FIELD];
+        const auto actionNode = hotKeyNode[ACTION_FIELD];
         if (!actionNode || actionNode.IsNull() || !actionNode.IsMap())
         {
             throwError<std::invalid_argument>("All '" + std::string(HOTKEYS_FIELD) + 
@@ -231,17 +233,17 @@ namespace wm::config
 
     //=================================================================================================================
 
-    using Keys = std::vector<wxKeyCode>;
+    using Keys = std::set<int>;
 
     //=================================================================================================================
 
-    inline void operator>>(const YAML::Node& hotkeyNode, Keys& keys)
+    inline void operator>>(const YAML::Node& hotKeyNode, Keys& keys)
     {
 #ifdef DEBUG
-        std::cout << "Parsing hotkey keys...\n";
+        std::cout << "Parsing hotKey keys...\n";
 #endif
 
-        auto keyNode = hotkeyNode[KEYS_FIELD];
+        auto keyNode = hotKeyNode[KEYS_FIELD];
         if (!keyNode || keyNode.IsNull() || !keyNode.IsSequence())
         {
             throwError<std::invalid_argument>("All '" + std::string(HOTKEYS_FIELD) + 
@@ -255,15 +257,15 @@ namespace wm::config
             try 
             {
                 utils::tolower(keyString);
-                const auto keyCode = keys::keyMap.at(keyString);
-                keys.push_back(keyCode);
+                const auto keyCode = keys::KEY_MAP.at(keyString);
+                keys.insert(keyCode);
             }
-            catch (const std::out_of_range& err)
+            catch (const std::out_of_range&)
             {
                 std::string errStr = "'" + keyString + "' is not a supported key.\nSupported keys are:\n";
-                for (auto& [key, value] : keys::keyMap)
+                for (auto& [k, v] : keys::KEY_MAP)
                 {
-                    errStr += '\t' + key + '\n';
+                    errStr += '\t' + k + '\n';
                 }
                 throwError<std::invalid_argument>(errStr);
             }
@@ -272,7 +274,7 @@ namespace wm::config
 
     //=================================================================================================================
 
-    struct Hotkey
+    struct HotKey
     {
         std::string name{""};
         Keys        keys{};
@@ -281,21 +283,59 @@ namespace wm::config
 
     //=================================================================================================================
 
-#ifdef DEBUG
-    inline std::ostream& operator<<(std::ostream& os, const Hotkey& hotkey)
+    bool operator<(const HotKey& lhs, const HotKey& rhs)
     {
-        os << "Hotkey:\n";
-        os << "\tname: " << hotkey.name << '\n';
+        int index = 0;
+
+        if (lhs.keys.size() > rhs.keys.size())
+        {
+            for (const auto value : rhs.keys)
+            {
+                const auto diff = std::distance(lhs.keys.begin(), lhs.keys.upper_bound(value)) - index;
+                if (diff == 1)
+                {
+                    ++index;
+                    continue;
+                }
+
+                return diff > 1;
+            }
+        }
+        else
+        {
+            for (const auto value : lhs.keys)
+            {
+                const auto diff = std::distance(rhs.keys.begin(), rhs.keys.upper_bound(value)) - index;
+                if (diff == 1)
+                {
+                    ++index;
+                    continue;
+                }
+
+                return diff < 1;
+            }
+        }
+
+        return false;
+    }
+
+    //=================================================================================================================
+
+#ifdef DEBUG
+    inline std::ostream& operator<<(std::ostream& os, const HotKey& hotKey)
+    {
+        os << "HotKey:\n";
+        os << "\tname: " << hotKey.name << '\n';
         os << "\tkeys: ";
-        for (const auto key : hotkey.keys)
+        for (const auto key : hotKey.keys)
         {
             os << key << " ";
         }
         os << '\n';
         os << "\taction:\n";
-        os << "\t\tlocation: " << static_cast<std::underlying_type<Vertical>::type>(hotkey.action.location.vertical);
-        os << ", " << static_cast<std::underlying_type<Horizontal>::type>(hotkey.action.location.horizontal) << '\n';
-        os << "\t\tsize: " << hotkey.action.size.vertical << ", " << hotkey.action.size.horizontal << '\n';
+        os << "\t\tlocation: " << static_cast<std::underlying_type<Vertical>::type>(hotKey.action.location.vertical);
+        os << ", " << static_cast<std::underlying_type<Horizontal>::type>(hotKey.action.location.horizontal) << '\n';
+        os << "\t\tsize: " << hotKey.action.size.vertical << ", " << hotKey.action.size.horizontal << '\n';
 
         return os;
     }
@@ -303,24 +343,30 @@ namespace wm::config
 
     //=================================================================================================================
 
-    inline void operator>>(const YAML::Node& hotkeyNode, Hotkey& hotkey)
+    inline void operator>>(const YAML::Node& hotKeyNode, HotKey& hotKey)
     {
 #ifdef DEBUG
-        std::cout << "Parsing hotkey...\n";
+        std::cout << "Parsing hotKey...\n";
 #endif
 
-        if (!hotkeyNode.IsMap())
+        if (!hotKeyNode.IsMap())
         {
             throwError<std::invalid_argument>("All items of the '" + std::string(HOTKEYS_FIELD) + 
                 "' sequence must be a dictionary");
         }
 
-        if (hotkeyNode[NAME_FIELD])
+        if (hotKeyNode[NAME_FIELD])
         {
-            hotkey.name = hotkeyNode[NAME_FIELD].as<std::string>();
+            hotKey.name = hotKeyNode[NAME_FIELD].as<std::string>();
         }
-        hotkeyNode >> hotkey.keys;
-        hotkeyNode >> hotkey.action;
+
+        hotKeyNode >> hotKey.keys;
+        if (hotKey.keys.size() < 1)
+        {
+            throwError<std::invalid_argument>(std::string(KEYS_FIELD) + " cannot be emtpy.");
+        }
+
+        hotKeyNode >> hotKey.action;
     }
 
     //=================================================================================================================
@@ -328,8 +374,8 @@ namespace wm::config
     class Config
     {
     public:
-        using iterator = std::vector<Hotkey>::iterator;
-        using const_iterator = std::vector<Hotkey>::const_iterator;
+        using iterator = std::set<HotKey>::iterator;
+        using const_iterator = std::set<HotKey>::const_iterator;
 
         //=============================================================================================================
 
@@ -342,48 +388,57 @@ namespace wm::config
 
         iterator begin() noexcept
         {
-            return hotkeys_.begin();
+            return hotKeys_.begin();
         }
 
         //=============================================================================================================
 
         const_iterator begin() const noexcept
         {
-            return hotkeys_.begin();
+            return hotKeys_.begin();
         }
 
         //=============================================================================================================
 
         iterator end() noexcept
         {
-            return hotkeys_.end();
+            return hotKeys_.end();
         }
 
         //=============================================================================================================
 
         const_iterator end() const noexcept
         {
-            return hotkeys_.end();
+            return hotKeys_.end();
         }
 
         //=============================================================================================================
 
-        Hotkey& operator[](std::size_t i) noexcept
+        const_iterator getHotKey(const std::set<Keys::value_type>& keysPressed) const noexcept
         {
-            return hotkeys_[i];
+            if (!containsKeys(keysPressed))
+            {
+                return end();
+            }
+
+            auto iter = begin();
+            for (; iter != end(); ++iter)
+            {
+                const auto& hotKey = *iter;
+                if (std::includes(std::execution::par_unseq, 
+                    keysPressed.begin(), keysPressed.end(),
+                    hotKey.keys.begin(), hotKey.keys.end()))
+                {
+                    return iter;
+                }
+            }
+
+            return end();
         }
-
-        //=============================================================================================================
-
-        const Hotkey& operator[](std::size_t i) const noexcept
-        {
-            return hotkeys_[i];
-        }
-
-        //=============================================================================================================
 
     private:
-        std::vector<Hotkey> hotkeys_;
+        std::set<HotKey>            hotKeys_;
+        std::set<Keys::value_type>  allKeys_;
 
         //=============================================================================================================
 
@@ -398,29 +453,37 @@ namespace wm::config
             }
 
             const auto config = YAML::LoadFile(configFile);
-            const auto hotkeyNodes = config[HOTKEYS_FIELD];
+            const auto hotKeyNodes = config[HOTKEYS_FIELD];
 
-            if (!config.IsMap() || !hotkeyNodes)
+            if (!config.IsMap() || !hotKeyNodes)
             {
                 throwError<std::invalid_argument>("First element of the config yaml file should be a dictionary with a single key '" + 
                     std::string(HOTKEYS_FIELD));
             }
 
-            if (!hotkeyNodes.IsSequence())
+            if (!hotKeyNodes.IsSequence())
             {
                 throwError<std::invalid_argument>("'" + std::string(HOTKEYS_FIELD) + "' should be a sequence.");
             }
 
 #ifdef DEBUG
-            std::cout << "Parsing the hotkey sequence...\n";
+            std::cout << "Parsing the hotKey sequence...\n";
 #endif
 
-            for (const auto& hotkeyNode : hotkeyNodes)
+            for (const auto& hotKeyNode : hotKeyNodes)
             {
-                Hotkey hotkey;
-                hotkeyNode >> hotkey;
-                hotkeys_.push_back(hotkey);
+                HotKey hotKey;
+                hotKeyNode >> hotKey;
+                hotKeys_.insert(hotKey);
+                allKeys_.insert(hotKey.keys.begin(), hotKey.keys.end());
             }
+        }
+
+        bool containsKeys(const std::set<Keys::value_type>& keys) const noexcept
+        {
+            return std::includes(std::execution::par_unseq, 
+                allKeys_.begin(), allKeys_.end(), 
+                keys.begin(), keys.end());
         }
     };
 }
