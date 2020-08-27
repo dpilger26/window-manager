@@ -86,6 +86,8 @@ namespace wm::keys
                                                       {"pagedown", 0x22},
                                                       {"window", 0x5B}};
 
+    //=================================================================================================================
+
     std::set<int> get_keys_pressed()
     {
         std::set<int> pressed_keys;

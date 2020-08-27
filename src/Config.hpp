@@ -421,6 +421,9 @@ namespace wm::config
                 return end();
             }
 
+
+            // DP NOTE: can i make this search faster, instead of starting at begin() use an <algorithm> to 
+            // start at a better place?
             auto iter = begin();
             for (; iter != end(); ++iter)
             {

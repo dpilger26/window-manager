@@ -6,10 +6,12 @@ find_package(yaml-cpp REQUIRED)
 
 add_executable(${PROJECT_NAME} 
   Config.hpp
-  Controls.hpp
+  Constants.hpp
   Error.hpp
   Keys.hpp
   main.cpp
+  WindowController.hpp
+  WindowManager.hpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
