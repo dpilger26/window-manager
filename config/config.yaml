@@ -7,6 +7,7 @@ hotkeys:
                 vertical: center
         keys: 
             - window
+            - alt
             - 5
         name: Center
     - 
@@ -16,6 +17,7 @@ hotkeys:
                 vertical: center
         keys: 
             - window
+            - alt
             - 4
         name: Left
     - 
@@ -25,15 +27,17 @@ hotkeys:
                 vertical: center
         keys: 
             - window
+            - alt
             - 6
         name: Right
     - 
-        action: 
+        action:
             location: 
                 horizontal: center
                 vertical: top
         keys: 
             - window
+            - alt
             - 8
         name: Top
     - 
@@ -43,6 +47,7 @@ hotkeys:
                 vertical: bottom
         keys: 
             - window
+            - alt
             - 2
         name: Bottom
     - 
@@ -52,6 +57,7 @@ hotkeys:
                 vertical: top
         keys: 
             - window
+            - alt
             - 7
         name: Top_Left
     - 
@@ -61,6 +67,7 @@ hotkeys:
                 vertical: top
         keys: 
             - window
+            - alt
             - 9
         name: Top_Right
     - 
@@ -70,6 +77,7 @@ hotkeys:
                 vertical: bottom
         keys: 
             - window
+            - alt
             - 1
         name: Bottom_Left
     - 
@@ -79,6 +87,7 @@ hotkeys:
                 vertical: bottom
         keys: 
             - window
+            - alt
             - 3
         name: Bottom_Right
     - 
@@ -100,13 +109,14 @@ hotkeys:
                 horizontal: center
                 vertical: center
             size: 
-                horizontal: 60
+                horizontal: 40
                 vertical: 100
         keys: 
             - window
+            - ctrl
             - alt
             - 5
-        name: Center_Resize_60
+        name: Center_Resize_40
     - 
         action: 
             location: 
@@ -126,16 +136,17 @@ hotkeys:
                 horizontal: left
                 vertical: center
             size: 
-                horizontal: 20
+                horizontal: 30
                 vertical: 100
         keys: 
             - window
+            - ctrl
             - alt
             - 4
-        name: Left_Resize_20
+        name: Left_Resize_30
     - 
         action: 
-            location: 
+            location:
                 horizontal: right
                 vertical: center
             size: 
@@ -152,15 +163,16 @@ hotkeys:
                 horizontal: right
                 vertical: center
             size: 
-                horizontal: 20
+                horizontal: 30
                 vertical: 100
         keys: 
             - window
+            - ctrl
             - alt
             - 6
-        name: Right_Resize_20
+        name: Right_Resize_30
     - 
-        action: 
+        action:
             location: 
                 horizontal: left
                 vertical: top
@@ -228,7 +240,7 @@ hotkeys:
         action: 
             location: 
                 horizontal: center
-                vertical: center
+                vertical: bottom
             size: 
                 horizontal: 50
                 vertical: 50

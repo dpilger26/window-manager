@@ -93,10 +93,15 @@ namespace wm
                 return;
             }
 
-            const auto leftPos = calcWindowLeftPosition(info, action.location.horizontal);
-            const auto topPos = calcWindowTopPosition(info, action.location.vertical);
             const auto width = calcWindowWidth(info, action.size.horizontal);
             const auto height = calcWindowHeight(info, action.size.vertical);
+            const auto leftPos = calcWindowLeftPosition(info, action.location.horizontal, width);
+            const auto topPos = calcWindowTopPosition(info, action.location.vertical, height);
+
+#ifdef DEBUG
+            std::cout << "Setting window position [" << leftPos << ", " << topPos;
+            std::cout << ", " << width << ", " << height << "]\n";
+#endif
 
             ShowWindow(info.window.handle, SW_RESTORE);
             SetWindowPos(info.window.handle, HWND_TOP, leftPos, topPos, width, height, SWP_ASYNCWINDOWPOS);
@@ -114,7 +119,7 @@ namespace wm
             {
                 handle = GetForegroundWindow(); 
                 info.cbSize = sizeof(decltype(info));
-                success = !static_cast<bool>(GetWindowInfo(handle, &info));
+                success = GetWindowInfo(handle, &info) != 0;
 
 #ifdef DEBUG
                 if (success)
@@ -143,7 +148,7 @@ namespace wm
             {
                 handle = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
                 info.cbSize = sizeof(decltype(info));
-                success = !static_cast<bool>(GetMonitorInfoA(handle, &info));
+                success = GetMonitorInfoA(handle, &info) != 0;
 #ifdef DEBUG
                 if (success)
                 {
@@ -176,35 +181,88 @@ namespace wm
 
         int calcWindowHeight(const Info& info, int verticalSize) const noexcept
         {
-            //if (verticalSize < 0)
-            //{
-                return std::abs(info.window.info.rcWindow.top - info.window.info.rcWindow.bottom);
-            //}
+            if (verticalSize < 0)
+            {
+                return std::abs(info.window.info.rcWindow.bottom - info.window.info.rcWindow.top);
+            }
+
+            auto monitorHeight = std::abs(info.monitor.info.rcWork.bottom - info.monitor.info.rcWork.top);
+            return static_cast<int>(std::floor(static_cast<double>(monitorHeight * verticalSize) / 100.));
         }
 
         int calcWindowWidth(const Info& info, int horizontalSize) const noexcept
         {
-            //if (horizontalSize < 0)
-            //{
-                return std::abs(info.window.info.rcWindow.left - info.window.info.rcWindow.right);
-            //}
+            if (horizontalSize < 0)
+            {
+                return std::abs(info.window.info.rcWindow.right - info.window.info.rcWindow.left);
+            }
+
+            auto monitorWidth = std::abs(info.monitor.info.rcWork.right - info.monitor.info.rcWork.left);
+            return static_cast<int>(std::floor(static_cast<double>(monitorWidth * horizontalSize) / 100.));
         }
 
-        int calcWindowLeftPosition(const Info& info, const config::Horizontal& horizontalPos) const noexcept
+        int calcWindowLeftPosition(const Info& info, const config::Horizontal& horizontalPos, int windowWidth) const noexcept
         {
-            //if (horizontalPos == config::Horizontal::None)
-            //{
-                return info.window.info.rcWindow.left;
-            //}
+            int leftPos = 0;
+            switch (horizontalPos)
+            {
+                case config::Horizontal::Left:
+                {
+                    leftPos = info.monitor.info.rcWork.left;
+                    break;
+                }
+                case config::Horizontal::Center:
+                {
+                    auto windowHalfWidth = windowWidth / 2; // integer division ok
+                    auto monitorHalfWidth = std::abs(info.monitor.info.rcWork.right - info.monitor.info.rcMonitor.left) / 2; // integer division ok
+                    leftPos = monitorHalfWidth - windowHalfWidth;
+                    break;
+                }
+                case config::Horizontal::Right:
+                {
+                    leftPos = info.monitor.info.rcWork.right - windowWidth;
+                    break;
+                }
+                case config::Horizontal::None:
+                {
+                    leftPos = info.window.info.rcWindow.left;
+                    break;
+                }
+            }
+
+            return leftPos;
         }
 
-        int calcWindowTopPosition(const Info& info, const config::Vertical& verticalPos) const noexcept
+        int calcWindowTopPosition(const Info& info, const config::Vertical& verticalPos, int windowHeight) const noexcept
         {
-            //if (verticalPos == config::Vertical::None)
-            //{
-                return info.window.info.rcWindow.top;
-            //}
-        }
+            int topPos = 0;
+            switch (verticalPos)
+            {
+                case config::Vertical::Bottom:
+                {
+                    topPos = info.monitor.info.rcWork.bottom - windowHeight;
+                    break;
+                }
+                case config::Vertical::Center:
+                {
+                    auto windowHalfHeight = windowHeight / 2; // integer division ok
+                    auto monitorHalfHeight = std::abs(info.monitor.info.rcWork.bottom - info.monitor.info.rcMonitor.top) / 2; // integer division ok
+                    topPos = monitorHalfHeight - windowHalfHeight;
+                    break;
+                }
+                case config::Vertical::Top:
+                {
+                    topPos = info.monitor.info.rcWork.top;
+                    break;
+                }
+                case config::Vertical::None:
+                {
+                    topPos = info.window.info.rcWindow.top;
+                    break;
+                }
+            }
 
+            return topPos;
+        }
     };
 }
