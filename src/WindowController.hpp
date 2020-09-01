@@ -170,8 +170,8 @@ namespace wm
                 case config::Horizontal::Center:
                 {
                     auto windowHalfWidth = windowWidth / 2; // integer division ok
-                    auto monitorHalfWidth = std::abs(info.monitor.info.rcWork.right - info.monitor.info.rcMonitor.left) / 2; // integer division ok
-                    leftPos = monitorHalfWidth - windowHalfWidth - info.window.borderLeft;
+                    auto monitorHalfWidth = std::abs(info.monitor.info.rcWork.right - info.monitor.info.rcWork.left) / 2; // integer division ok
+                    leftPos = info.monitor.info.rcWork.left + monitorHalfWidth - windowHalfWidth - info.window.borderLeft;
                     break;
                 }
                 case config::Horizontal::Right:
@@ -202,8 +202,8 @@ namespace wm
                 case config::Vertical::Center:
                 {
                     auto windowHalfHeight = windowHeight / 2; // integer division ok
-                    auto monitorHalfHeight = std::abs(info.monitor.info.rcWork.bottom - info.monitor.info.rcMonitor.top) / 2; // integer division ok
-                    topPos = std::max(monitorHalfHeight - windowHalfHeight - info.window.borderTop, info.monitor.info.rcMonitor.top); // max keeps from snapping
+                    auto monitorHalfHeight = std::abs(info.monitor.info.rcWork.bottom - info.monitor.info.rcWork.top) / 2; // integer division ok
+                    topPos = info.monitor.info.rcWork.top + monitorHalfHeight - windowHalfHeight - info.window.borderTop;
                     break;
                 }
                 case config::Vertical::Top:
@@ -218,7 +218,7 @@ namespace wm
                 }
             }
 
-            return topPos;
+            return std::max(topPos, static_cast<int>(info.monitor.info.rcMonitor.top)); // max keeps from snapping
         }
     };
 }
