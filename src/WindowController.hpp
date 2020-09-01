@@ -4,6 +4,7 @@
 
 #include <Windows.h>
 
+#include <algorithm>
 #include <cmath>
 #ifdef DEBUG
 #include <iostream>
@@ -13,71 +14,6 @@
 
 namespace wm
 {
-    //std::string GetActiveWindowTitle()
-    //{
-    //    char wnd_title[255];
-    //    auto hwnd = GetForegroundWindow(); // get handle of currently active window
-    //    GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
-    //    std::cout << wnd_title << '\n';
-    //    return wnd_title;
-    //}
-
-    //RECT GetActiveMonitorSize()
-    //{
-    //    auto hwnd = GetForegroundWindow(); // get handle of currently active window
-    //    auto hwMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-
-    //    MONITORINFOEX monitorInfo;
-    //    monitorInfo.cbSize = sizeof(MONITORINFOEX);
-    //    GetMonitorInfoA(hwMonitor, &monitorInfo);
-
-    //    std::cout << monitorInfo.szDevice << " [" << monitorInfo.rcWork.top << ", " << monitorInfo.rcWork.bottom;
-    //    std::cout << ", " << monitorInfo.rcWork.left << ", " << monitorInfo.rcWork.right << "]\n";
-
-    //    return monitorInfo.rcWork;
-    //}
-
-    //void setWindowPos()
-    //{
-    //    auto hwnd = GetForegroundWindow(); // get handle of currently active window
-    //    auto hwMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-
-    //    MONITORINFOEX monitorInfo;
-    //    monitorInfo.cbSize = sizeof(MONITORINFOEX);
-    //    auto success = GetMonitorInfoA(hwMonitor, &monitorInfo);
-    //    if (success == 0)
-    //    {
-    //        return;
-    //    }
-
-    //    auto width = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
-    //    auto height = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
-
-    //    ShowWindow(hwnd, SW_RESTORE);
-    //    SetWindowPos(hwnd, HWND_TOP, monitorInfo.rcWork.left, monitorInfo.rcWork.top, width / 2, height, SWP_ASYNCWINDOWPOS);
-    //}
-
-    //void setWindowPlacement()
-    //{
-    //    auto hwnd = GetForegroundWindow(); // get handle of currently active window
-    //    auto hwMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-
-    //    MONITORINFOEX monitorInfo;
-    //    monitorInfo.cbSize = sizeof(MONITORINFOEX);
-    //    GetMonitorInfoA(hwMonitor, &monitorInfo);
-
-    //    auto width = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
-    //    auto height = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
-
-    //    WINDOWPLACEMENT windowPlacement;
-    //    windowPlacement.length = sizeof(WINDOWPLACEMENT);
-    //    windowPlacement.flags = WPF_ASYNCWINDOWPLACEMENT;
-    //    windowPlacement.showCmd = SW_RESTORE;
-    //    windowPlacement.rcNormalPosition = { monitorInfo.rcWork.left, monitorInfo.rcWork.top };
-
-    //    SetWindowPlacement(hwnd, &windowPlacement);
-    //}
-
     class WindowController
     {
     public:
@@ -121,23 +57,35 @@ namespace wm
                 info.cbSize = sizeof(decltype(info));
                 success = GetWindowInfo(handle, &info) != 0;
 
-#ifdef DEBUG
                 if (success)
                 {
+                    borderTop = std::abs(info.rcWindow.top - info.rcClient.top);
+                    borderBottom = std::abs(info.rcWindow.bottom - info.rcClient.bottom);
+                    borderLeft = std::abs(info.rcWindow.left - info.rcClient.left);
+                    borderRight = std::abs(info.rcWindow.right - info.rcClient.right);
+#ifdef DEBUG
                     char windowTitle[255];
                     auto titleSuccess = GetWindowText(handle, windowTitle, sizeof(windowTitle));
                     if (titleSuccess != 0)
                     {
-                        std::cout << windowTitle << ' ';
+                        std::cout << "window title: " << windowTitle << '\n';
                     }
-                    std::cout << "[" << info.rcWindow.top << ", " << info.rcWindow.bottom;
+                    std::cout << "\twindow: [" << info.rcWindow.top << ", " << info.rcWindow.bottom;
                     std::cout << ", " << info.rcWindow.left << ", " << info.rcWindow.right << "]\n";
+                    std::cout << "\tclient: [" << info.rcClient.top << ", " << info.rcClient.bottom;
+                    std::cout << ", " << info.rcClient.left << ", " << info.rcClient.right << "]\n";
+                    std::cout << "\tborder: [" << borderTop << ", " << borderBottom;
+                    std::cout << ", " << borderLeft << ", " << borderRight << "]\n";
 #endif
                 }
             }
 
             HWND        handle{};
             WINDOWINFO  info{};
+            int         borderTop{ 0 };
+            int         borderBottom{ 0 };
+            int         borderLeft{ 0 };
+            int         borderRight{ 0 };
             bool        success{ false };
         };
 
@@ -186,8 +134,12 @@ namespace wm
                 return std::abs(info.window.info.rcWindow.bottom - info.window.info.rcWindow.top);
             }
 
-            auto monitorHeight = std::abs(info.monitor.info.rcWork.bottom - info.monitor.info.rcWork.top);
-            return static_cast<int>(std::floor(static_cast<double>(monitorHeight * verticalSize) / 100.));
+            const auto monitorHeight = std::abs(info.monitor.info.rcWork.bottom - info.monitor.info.rcWork.top);
+            auto windowHeight = static_cast<int>(std::floor(static_cast<double>(monitorHeight * verticalSize) / 100.));
+            windowHeight += info.window.borderTop;
+            windowHeight += info.window.borderBottom;
+
+            return windowHeight;
         }
 
         int calcWindowWidth(const Info& info, int horizontalSize) const noexcept
@@ -197,8 +149,12 @@ namespace wm
                 return std::abs(info.window.info.rcWindow.right - info.window.info.rcWindow.left);
             }
 
-            auto monitorWidth = std::abs(info.monitor.info.rcWork.right - info.monitor.info.rcWork.left);
-            return static_cast<int>(std::floor(static_cast<double>(monitorWidth * horizontalSize) / 100.));
+            const auto monitorWidth = std::abs(info.monitor.info.rcWork.right - info.monitor.info.rcWork.left);
+            auto windowWidth = static_cast<int>(std::floor(static_cast<double>(monitorWidth * horizontalSize) / 100.));
+            windowWidth += info.window.borderLeft;
+            windowWidth += info.window.borderRight;
+
+            return windowWidth;
         }
 
         int calcWindowLeftPosition(const Info& info, const config::Horizontal& horizontalPos, int windowWidth) const noexcept
@@ -208,19 +164,19 @@ namespace wm
             {
                 case config::Horizontal::Left:
                 {
-                    leftPos = info.monitor.info.rcWork.left;
+                    leftPos = info.monitor.info.rcWork.left - info.window.borderLeft;
                     break;
                 }
                 case config::Horizontal::Center:
                 {
                     auto windowHalfWidth = windowWidth / 2; // integer division ok
                     auto monitorHalfWidth = std::abs(info.monitor.info.rcWork.right - info.monitor.info.rcMonitor.left) / 2; // integer division ok
-                    leftPos = monitorHalfWidth - windowHalfWidth;
+                    leftPos = monitorHalfWidth - windowHalfWidth - info.window.borderLeft;
                     break;
                 }
                 case config::Horizontal::Right:
                 {
-                    leftPos = info.monitor.info.rcWork.right - windowWidth;
+                    leftPos = info.monitor.info.rcWork.right - windowWidth + info.window.borderRight;
                     break;
                 }
                 case config::Horizontal::None:
@@ -240,19 +196,19 @@ namespace wm
             {
                 case config::Vertical::Bottom:
                 {
-                    topPos = info.monitor.info.rcWork.bottom - windowHeight;
+                    topPos = info.monitor.info.rcWork.bottom - windowHeight + info.window.borderBottom;
                     break;
                 }
                 case config::Vertical::Center:
                 {
                     auto windowHalfHeight = windowHeight / 2; // integer division ok
                     auto monitorHalfHeight = std::abs(info.monitor.info.rcWork.bottom - info.monitor.info.rcMonitor.top) / 2; // integer division ok
-                    topPos = monitorHalfHeight - windowHalfHeight;
+                    topPos = std::max(monitorHalfHeight - windowHalfHeight - info.window.borderTop, info.monitor.info.rcMonitor.top); // max keeps from snapping
                     break;
                 }
                 case config::Vertical::Top:
                 {
-                    topPos = info.monitor.info.rcWork.top;
+                    topPos = info.monitor.info.rcWork.top - info.window.borderTop;
                     break;
                 }
                 case config::Vertical::None:

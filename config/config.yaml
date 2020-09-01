@@ -129,7 +129,7 @@ hotkeys:
             - window
             - ctrl
             - 4
-        name: Left_Resize_25
+        name: Left_Resize_25Q
     - 
         action: 
             location: 

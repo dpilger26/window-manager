@@ -42,7 +42,7 @@ namespace wm
                 {
                     const auto& hotKey = *iter;
 #ifdef DEBUG
-                    std::cout << hotKey.name << '\n';
+                    std::cout << '\n' << hotKey.name << '\n';
 #endif
                     controller_.doIt(hotKey.action);
                 }
